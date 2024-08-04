@@ -1,0 +1,165 @@
+<!-- templates/geoid_form.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geoid Form</title>
+    <style>
+        body {
+            background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url("/static/1.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            width: 100%;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        h1 {
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .top-right {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        label {
+            display: block;
+            font-size: 18px;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        input[type="number"], select, input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #68D391;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+            text-align: center;
+        }
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            /* background-color: #f1f1f1; */
+            font-weight: bold;
+            border: none;
+            border-bottom: 1px solid #ccc;
+        }
+        .tab.active {
+            background-color: white;
+            border-bottom: none;
+        }
+        .tab-content {
+            display: none;
+            padding: 20px;
+            /* background-color: white; */
+        }
+        .tab-content.active {
+            display: block;
+        }
+        form {
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.9);
+        }
+    </style>
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tab");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+    </script>
+</head>
+<body onload="document.getElementById('defaultOpen').click()">
+    <div class="container">
+        <div class="top-right">
+            <label for="order">Select Order N</label>
+            <select id="order" name="order">
+                {% for i in range(1, 11) %}
+                    <option value="1:{{ i }}">1:{{ i }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <h1>Geoid Form</h1>
+        <div class="tabs">
+            <div class="tab" id="defaultOpen" onclick="openTab(event, 'Point')">Point Mode</div>
+            <div class="tab" onclick="openTab(event, 'File')">File Mode</div>
+        </div>
+        <div id="Point" class="tab-content">
+            <form method="post">
+                <label for="north">North</label>
+                <input type="number" id="north" name="north" step="0.1" value="{{ north }}">
+
+                <label for="east">East</label>
+                <input type="number" id="east" name="east" step="0.1" value="{{ east }}">
+
+                <label for="elipse">Elipse</label>
+                <input type="number" id="elipse" name="elipse" step="0.1" value="{{ elipse }}">
+
+                <button type="submit" name="submit_point">Calculate</button>
+            </form>
+            {% if orthometric_height %}
+                <div class="result">
+                    Orthometric Height: {{ orthometric_height }}
+                </div>
+            {% endif %}
+        </div>
+        <div id="File" class="tab-content">
+            <form method="post" enctype="multipart/form-data">
+                <label for="file">Upload File</label>
+                <input type="file" id="file" name="file">
+                <button type="submit" name="submit_file">Upload</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
