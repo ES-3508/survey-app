@@ -1,10 +1,9 @@
-<!-- templates/home.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Geoid or Hybrid Selector</title>
+    <title>Home</title>
     <style>
         body {
             background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url("/static/1.jpg");
@@ -21,7 +20,7 @@
             color: #333;
         }
         .container {
-            max-width: 400px;
+            max-width: 800px;
             width: 100%;
             padding: 20px;
             background: rgba(255, 255, 255, 0.9);
@@ -30,9 +29,8 @@
             text-align: center;
         }
         button {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
+            padding: 10px 20px;
+            margin: 10px;
             background-color: #68D391;
             color: white;
             font-size: 16px;
@@ -45,10 +43,12 @@
 </head>
 <body>
     <div class="container">
-        <h1>Select Mode</h1>
+        <h1>Welcome to the Geoid Calculator</h1>
         <form method="post">
-            <button type="submit" name="geoid">Geoid</button>
-            <button type="submit" name="hybrid">Hybrid</button>
+            <button type="submit" name="geoid_point">Geoid Point Mode</button>
+            <button type="submit" name="geoid_file">Geoid File Mode</button>
+            <button type="submit" name="hybrid">Hybrid Mode</button>
+            <button type="submit" name="hybrid_file">Hybrid File Mode</button>
         </form>
     </div>
 </body>
