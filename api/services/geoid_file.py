@@ -47,10 +47,9 @@ def calculate_UN_for_point(E_point, N_point, UN_point, order, df_model):
     point_array = np.array(point_columns)
 
     # Predict UN value for the given point
-    UN_new = point_array.dot(Z)
-    UN_diff = UN_new - UN_point
+    UN_new = -point_array.dot(Z)+UN_point
 
-    return UN_new, UN_diff
+    return UN_new
 
 # Function to process a DataFrame of points and calculate UN for each
 def calculate_UN_for_dataframe(df_input, model_csv_path, order):
@@ -67,13 +66,13 @@ def calculate_UN_for_dataframe(df_input, model_csv_path, order):
     for _, row in df_input.iterrows():
         E_point = row['East']
         N_point = row['North']
-        UN_point = row['UN1']
+        UN_point = row['elp']
 
-        UN_new, UN_diff = calculate_UN_for_point(E_point, N_point, UN_point, order, df_model)
-        results.append([E_point, N_point, UN_point, UN_new, UN_diff])
+        UN_new = calculate_UN_for_point(E_point, N_point, UN_point, order, df_model)
+        results.append([E_point, N_point, UN_point, UN_new])
 
     # Create a DataFrame with the results
-    df_results = pd.DataFrame(results, columns=['East', 'North', 'UN1', 'UN_new', 'UN_diff'])
+    df_results = pd.DataFrame(results, columns=['East', 'North', 'Ellipse', 'UN_new'])
 
     return df_results
 

@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 # Function to calculate UN for a given point and polynomial order
-def calculate_UN_for_point(E_point, N_point, UN_point, order, csv_path):
+def calculate_UN_hybrid_for_point(E_point, N_point, UN_point,gravity, order, csv_path):
     # Load the CSV file into a DataFrame
     df = pd.read_csv(csv_path)
 
@@ -51,10 +51,8 @@ def calculate_UN_for_point(E_point, N_point, UN_point, order, csv_path):
     point_array = np.array(point_columns)
 
     # Predict UN value for the given point
-    UN_new = point_array.dot(Z)
-    UN_diff = UN_new - UN_point
-
-    return UN_new, UN_diff
+    UN_new = point_array.dot(Z)+UN_point-gravity
+    return UN_new
 
 # Example usage
 if __name__ == '__main__':
@@ -64,6 +62,6 @@ if __name__ == '__main__':
     UN_point = -98.27
     order = 3
 
-    UN_new, UN_diff = calculate_UN_for_point(E_point, N_point, UN_point, order, csv_path)
+    UN_new = calculate_UN_hybrid_for_point(E_point, N_point, UN_point, order, csv_path)
     print("Predicted UN value for the given point:", UN_new)
     print("Difference between predicted and given UN:", UN_diff)

@@ -51,20 +51,17 @@ def calculate_UN_for_point(E_point, N_point, UN_point, order, csv_path):
     point_array = np.array(point_columns)
 
     # Predict UN value for the given point
-    UN_new = point_array.dot(Z)
-    UN_diff = UN_new - UN_point
-
-    return UN_new, UN_diff
+    UN_new = point_array.dot(Z)-UN_point
+    return UN_new
 
 # Example usage
-# 397402.0	554803.0	-98.27
-csv_path = 'Model.csv'
-E_point = 397402.0
-N_point = 554803.0
-UN_point = -98.27
-order = 6
+if __name__ == '__main__':
+    csv_path = 'Model.csv'
+    E_point = 554803.0
+    N_point = 397402.0
+    UN_point = -98.27
+    order = 3
 
-UN_new, UN_diff = calculate_UN_for_point(E_point, N_point, UN_point, order, csv_path)
-print("Predicted UN value for the given point:", UN_new)
-print("Difference between predicted and given UN:", UN_diff)
-
+    UN_new = calculate_UN_for_point(E_point, N_point, UN_point, order, csv_path)
+    print("Predicted UN value for the given point:", UN_new)
+    print("Difference between predicted and given UN:", UN_diff)

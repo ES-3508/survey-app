@@ -1,9 +1,10 @@
+<!-- templates/hybrid_form.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Geoid Point Form</title>
+    <title>Hybrid Form</title>
     <style>
         body {
             background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url("/static/1.jpg");
@@ -100,7 +101,7 @@
         <a href="/hybrid_file">Hybrid File Mode</a>
     </div>
     <div class="container">
-        <h1>Geoid Point Form</h1>
+        <h1>Hybrid Form</h1>
         <form method="post">
             <div class="top-right">
                 <label for="order">Order</label>
@@ -116,10 +117,13 @@
             <label for="east">East</label>
             <input type="text" id="east" name="east" value="{{ east }}">
 
-            <label for="undulation">Undulation</label>
+            <label for="elipse">Ellipsoidal height</label>
+            <input type="text" id="elipse" name="elipse" value="{{ elipse }}">
+
+            <label for="undulation">Gravity</label>
             <input type="text" id="undulation" name="undulation" value="{{ undulation }}">
 
-            <button type="submit" name="submit_point">Calculate</button>
+            <button type="submit" name="submit_hybrid">Calculate</button>
         </form>
         {% if orthometric_height %}
             <div class="result">

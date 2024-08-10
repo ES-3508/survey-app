@@ -3,6 +3,8 @@ from flask import Flask, render_template, request, redirect, url_for
 import pandas as pd
 from services.geoid_point import calculate_UN_for_point
 from services.geoid_file import calculate_UN_for_dataframe
+from services.hybrid_point import calculate_UN_hybrid_for_point
+from services.hybrid_file import calculate_UN_hybrid_for_dataframe
 
 app = Flask(__name__)
 
@@ -31,8 +33,8 @@ def geoid_point_form():
             east = float(request.form.get('east', 0))
             undulation = float(request.form.get('undulation', 0))
             order = int(request.form.get('order', 5))  # Default value is 5
-            csv_path = 'services/Model.csv'
-            UN_new, UN_diff = calculate_UN_for_point(east, north, undulation, order, csv_path)
+            csv_path = 'services/dataset/normal/Model.csv'
+            UN_new = calculate_UN_for_point(east, north, undulation, order, csv_path)
             print(UN_new)
 
             # Print the input values
@@ -60,11 +62,11 @@ def geoid_file_form():
         file = request.files['file']
         if file:
             df_i = pd.read_csv(file)
-            csv_path = 'services/Model.csv'
+            csv_path = 'services/dataset/normal/Model.csv'
             order = int(request.form.get('order', 5))  # Default value is 5
             df = calculate_UN_for_dataframe(df_i, csv_path, order)
-            if set(['East', 'North', 'UN1', 'UN_new']).issubset(df.columns):
-                df = df[['East', 'North', 'UN1', 'UN_new']]
+            if set(['East', 'North', 'Ellipse','Gravity', 'UN_new']).issubset(df.columns):
+                df = df[['East', 'North', 'Ellipse','Gravity', 'UN_new']]
                 table_data = {
                     "columns": df.columns.tolist(),
                     "data": df.values.tolist()
@@ -88,8 +90,8 @@ def hybrid_form():
         undulation = float(request.form.get('undulation', 0))
         order = int(request.form.get('order', 5))  # Default value is 5
 
-        csv_path = 'services/Model.csv'
-        UN_new, UN_diff = calculate_UN_for_point(east, north, undulation, order, csv_path)
+        csv_path = 'services/dataset/hybrid/Model.csv'
+        UN_new = calculate_UN_hybrid_for_point(east, north, elipse,undulation, order, csv_path)
 
         # Print the input values
         print(f"North: {north}, East: {east}, Elipse: {elipse}, Undulation: {undulation}, Order: {order}")
@@ -111,16 +113,19 @@ def hybrid_file_form():
     table_data = None
 
     if request.method == 'POST':
-        file = request.files['file']
-        order = int(request.form.get('order', 5))  # Default value is 5
-        if file:
-            df_input = pd.read_csv(file)
-            df_results = calculate_UN_for_dataframe(df_input, 'services/Model.csv', order)
-            table_data = {
-                "columns": df_results.columns.tolist(),
-                "data": df_results.values.tolist()
-            }
-            print("File uploaded and processed.")
+        try:
+            file = request.files['file']
+            order = int(request.form.get('order', 5))  # Default value is 5
+            if file:
+                df_input = pd.read_csv(file)
+                df_results = calculate_UN_hybrid_for_dataframe(df_input, 'services/dataset/hybrid/Model.csv', order)
+                table_data = {
+                    "columns": df_results.columns.tolist(),
+                    "data": df_results.values.tolist()
+                }
+                print("File uploaded and processed.")
+        except Exception as e:
+            print(f"An error occurred: {e}")
 
     return render_template('hybrid_file_form.html', table_data=table_data)
 
